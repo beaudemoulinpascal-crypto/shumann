@@ -1,0 +1,184 @@
+/* SCHUMANN CHARACTER WIDGET */
+.schumann-character-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+}
+
+.schumann-character-svg {
+    width: 60px;
+    height: 80px;
+    transition: transform 0.3s ease;
+}
+
+.schumann-part {
+    fill: #a855f7;
+    /* Purple default */
+    transition: fill 0.3s ease;
+}
+
+.schumann-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.schumann-freq-indicator {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.3px;
+    margin-top: -4px;
+}
+
+/* Schumann Character States & Animations */
+
+/* LOW FREQUENCY STATE (< 7.7 Hz - Calm, Slow) */
+.schumann-character-container.state-low .schumann-part {
+    fill: #60a5fa;
+    /* Blue */
+}
+
+.schumann-character-container.state-low .schumann-character-svg {
+    animation: schumann-slow 5s ease-in-out infinite;
+}
+
+.schumann-character-container.state-low .schumann-label {
+    color: #60a5fa;
+}
+
+@keyframes schumann-slow {
+
+    0%,
+    100% {
+        transform: scale(1) translateY(0);
+    }
+
+    50% {
+        transform: scale(0.98) translateY(2px);
+    }
+}
+
+/* BALANCED STATE (7.7-8.0 Hz - Normal) */
+.schumann-character-container.state-balanced .schumann-part {
+    fill: #a855f7;
+    /* Purple */
+}
+
+.schumann-character-container.state-balanced .schumann-character-svg {
+    animation: schumann-balanced 3s ease-in-out infinite;
+}
+
+.schumann-character-container.state-balanced .schumann-label {
+    color: #a855f7;
+}
+
+@keyframes schumann-balanced {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+/* HIGH FREQUENCY STATE (> 8.0 Hz - Fast, Energized) */
+.schumann-character-container.state-high .schumann-part {
+    fill: #f97316;
+    /* Orange */
+}
+
+.schumann-character-container.state-high .schumann-character-svg {
+    animation: schumann-fast 0.8s ease-in-out infinite;
+}
+
+.schumann-character-container.state-high .schumann-label {
+    color: #f97316;
+}
+
+@keyframes schumann-fast {
+
+    0%,
+    100% {
+        transform: translateY(0) scale(1);
+    }
+
+    25% {
+        transform: translateY(-8px) scale(1.05);
+    }
+
+    50% {
+        transform: translateY(-4px) scale(1.02);
+    }
+
+    75% {
+        transform: translateY(-8px) scale(1.05);
+    }
+}
+
+/* VERY HIGH FREQUENCY STATE (> 8.5 Hz - Intense) */
+.schumann-character-container.state-veryhigh .schumann-part {
+    fill: #dc2626;
+    /* Red */
+}
+
+.schumann-character-container.state-veryhigh .schumann-character-svg {
+    animation: schumann-intense 0.4s ease-in-out infinite;
+}
+
+.schumann-character-container.state-veryhigh .schumann-label {
+    color: #dc2626;
+}
+
+@keyframes schumann-intense {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+
+    25% {
+        transform: translateY(-10px) rotate(-2deg) scale(1.08);
+    }
+
+    50% {
+        transform: translateY(-5px) rotate(0deg) scale(1.05);
+    }
+
+    75% {
+        transform: translateY(-10px) rotate(2deg) scale(1.08);
+    }
+}
+
+/* Glow effect on container */
+.schumann-character-container.state-low {
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+    border-color: rgba(96, 165, 250, 0.3);
+}
+
+.schumann-character-container.state-balanced {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    border-color: rgba(168, 85, 247, 0.3);
+}
+
+.schumann-character-container.state-high {
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+    border-color: rgba(249, 115, 22, 0.3);
+}
+
+.schumann-character-container.state-veryhigh {
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.5);
+    border-color: rgba(220, 38, 38, 0.3);
+}

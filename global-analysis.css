@@ -1,0 +1,130 @@
+/* GLOBAL ANALYSIS WIDGET */
+.global-analysis-widget {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+    border-left: 3px solid #00f0ff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.analysis-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(0, 240, 255, 0.3);
+    padding-bottom: 15px;
+}
+
+.analysis-header h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    color: #00f0ff;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.analysis-metric {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.metric-label {
+    font-size: 0.7rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.metric-status {
+    font-size: 0.65rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.analysis-conclusion {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    padding: 20px;
+    border: 2px solid rgba(0, 240, 255, 0.3);
+}
+
+.conclusion-title {
+    font-size: 0.85rem;
+    color: #00f0ff;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.conclusion-text {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.conclusion-recommendations {
+    background: rgba(0, 240, 255, 0.1);
+    border-left: 3px solid #00f0ff;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+.conclusion-recommendations ul {
+    margin: 0;
+    padding-left: 20px;
+    font-size: 0.8rem;
+    color: #ccc;
+    line-height: 1.8;
+}
+
+.global-status-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.status-calm {
+    background: rgba(0, 255, 136, 0.2);
+    color: #00ff88;
+    border: 1px solid #00ff88;
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+.status-active {
+    background: rgba(255, 170, 0, 0.2);
+    color: #ffaa00;
+    border: 1px solid #ffaa00;
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.3);
+}
+
+.status-intense {
+    background: rgba(255, 68, 68, 0.2);
+    color: #ff4444;
+    border: 1px solid #ff4444;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+}

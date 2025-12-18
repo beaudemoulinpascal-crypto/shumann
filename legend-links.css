@@ -1,0 +1,27 @@
+/* Legend Source Links */
+.source-link {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-top: 2px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+}
+
+.source-link:hover {
+    opacity: 1;
+    color: var(--accent-primary);
+    text-decoration: underline;
+}
+
+/* Adjust Legend Item Layout */
+.legend-item {
+    align-items: flex-start;
+    /* Align dots to top of multi-line text */
+}
+
+.legend-dot {
+    margin-top: 6px;
+    /* Balance with text */
+}

@@ -1,0 +1,171 @@
+/* BIO CHARACTER WIDGET */
+.bio-character-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+}
+
+.bio-character-svg {
+    width: 60px;
+    height: 80px;
+    transition: transform 0.3s ease;
+}
+
+.bio-part {
+    fill: #00f0ff;
+    transition: fill 0.3s ease;
+}
+
+.bio-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+}
+
+.bio-kp-indicator {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.3px;
+    margin-top: -4px;
+}
+
+/* Bio Character States & Animations */
+
+/* REGENERATION STATE (Green, Calm, Zen) */
+.bio-character-container.state-regeneration .bio-part {
+    fill: #d4ff00;
+}
+
+.bio-character-container.state-regeneration .bio-character-svg {
+    animation: bio-breathe 4s ease-in-out infinite;
+}
+
+.bio-character-container.state-regeneration .bio-label {
+    color: #d4ff00;
+}
+
+@keyframes bio-breathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+/* STIMULATION STATE (Yellow, Active, Energetic) */
+.bio-character-container.state-stimulation .bio-part {
+    fill: #ffeb3b;
+}
+
+.bio-character-container.state-stimulation .bio-character-svg {
+    animation: bio-bounce 0.6s ease-in-out infinite;
+}
+
+.bio-character-container.state-stimulation .bio-label {
+    color: #ffeb3b;
+}
+
+@keyframes bio-bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* TENSION STATE (Red, Stressed, Shaking) */
+.bio-character-container.state-tension .bio-part {
+    fill: #ff4444;
+}
+
+.bio-character-container.state-tension .bio-character-svg {
+    animation: bio-shake 0.3s ease-in-out infinite;
+}
+
+.bio-character-container.state-tension .bio-label {
+    color: #ff4444;
+}
+
+@keyframes bio-shake {
+
+    0%,
+    100% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateX(-3px) rotate(-2deg);
+    }
+
+    50% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    75% {
+        transform: translateX(3px) rotate(2deg);
+    }
+}
+
+/* NEUTRE STATE (Cyan, Default) */
+.bio-character-container.state-neutre .bio-part {
+    fill: #00f0ff;
+}
+
+.bio-character-container.state-neutre .bio-character-svg {
+    animation: bio-idle 2s ease-in-out infinite;
+}
+
+.bio-character-container.state-neutre .bio-label {
+    color: #00f0ff;
+}
+
+@keyframes bio-idle {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+/* Glow effect on container */
+.bio-character-container.state-regeneration {
+    box-shadow: 0 0 20px rgba(212, 255, 0, 0.4);
+    border-color: rgba(212, 255, 0, 0.3);
+}
+
+.bio-character-container.state-stimulation {
+    box-shadow: 0 0 20px rgba(255, 235, 59, 0.5);
+    border-color: rgba(255, 235, 59, 0.3);
+}
+
+.bio-character-container.state-tension {
+    box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+    border-color: rgba(255, 68, 68, 0.3);
+}
+
+.bio-character-container.state-neutre {
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    border-color: rgba(0, 240, 255, 0.2);
+}

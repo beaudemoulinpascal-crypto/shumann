@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Monitoring de la résonance de Schumann - Données réelles des observatoires">
+    <title>Schumann Monitor | Données Réelles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="analysis.css">
+    <link rel="stylesheet" href="graph.css">
+    <link rel="stylesheet" href="graph-tooltip.css">
+    <link rel="stylesheet" href="legend-links.css">
+    <link rel="stylesheet" href="forecast.css">
+    <link rel="stylesheet" href="bio-character.css">
+    <link rel="stylesheet" href="schumann-character.css">
+    <link rel="stylesheet" href="global-analysis.css">
+    <link rel="stylesheet" href="tabs-navigation.css">
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="grid-overlay"></div>
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <header class="main-header">
+        <div class="logo">
+            <div class="logo-wrapper">
+                <div class="pulse-ring"></div>
+                <div class="logo-icon">
+                    <svg viewBox="0 0 100 100" class="earth-icon">
+                        <circle cx="50" cy="50" r="45" class="earth-circle" />
+                        <path d="M50 5 Q70 30 50 50 Q30 70 50 95" class="earth-line" />
+                        <path d="M5 50 Q30 30 50 50 Q70 70 95 50" class="earth-line" />
+                        <circle cx="50" cy="50" r="8" class="earth-core" />
+                    </svg>
+                </div>
+            </div>
+            <div class="logo-text">
+                <h1>Schumann Monitor</h1>
+                <div class="status-badge">
+                    <span class="pulse-dot"></span>
+                    <span class="subtitle">REAL-TIME QUANTUM FIELD</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-controls">
+            <div class="audio-control-group">
+                <button id="toggle-audio-fixed" class="glass-btn audio-btn"
+                    title="Résonance Fondamentale Stable (7.83Hz)">
+                    <span class="icon">🔊</span>
+                    <span class="btn-text">Standard 7.83Hz</span>
+                    <canvas id="viz-canvas-fixed" height="20" width="50"
+                        style="display:none; margin-left:8px;"></canvas>
+                </button>
+                <button id="toggle-audio-live" class="glass-btn audio-btn"
+                    title="Fréquence Dynamique (Variation Temps Réel)">
+                    <span class="icon">⚡</span>
+                    <span class="btn-text">Quantum Live</span>
+                    <canvas id="viz-canvas" height="20" width="60" style="display:none; margin-left: 8px;"></canvas>
+                </button>
+            </div>
+
+            <div class="audio-volume-panel">
+                <input type="range" id="audio-volume" min="0" max="1" step="0.05" value="0.3" title="Volume">
+            </div>
+
+            <!-- BIO CHARACTER -->
+            <div class="bio-character-container" title="État biologique basé sur l'indice Kp géomagnétique">
+                <svg id="bio-character" viewBox="0 0 100 140" class="bio-character-svg">
+                    <!-- Head -->
+                    <circle cx="50" cy="20" r="12" class="bio-part bio-head" />
+                    <!-- Neck -->
+                    <rect x="47" y="30" width="6" height="8" class="bio-part bio-neck" />
+                    <!-- Torso -->
+                    <ellipse cx="50" cy="58" rx="16" ry="22" class="bio-part bio-torso" />
+                    <!-- Left Arm -->
+                    <ellipse cx="34" cy="52" rx="5" ry="18" transform="rotate(-15 34 52)" class="bio-part bio-arm" />
+                    <!-- Right Arm -->
+                    <ellipse cx="66" cy="52" rx="5" ry="18" transform="rotate(15 66 52)" class="bio-part bio-arm" />
+                    <!-- Hips -->
+                    <ellipse cx="50" cy="78" rx="14" ry="8" class="bio-part bio-hips" />
+                    <!-- Left Leg -->
+                    <ellipse cx="42" cy="105" rx="6" ry="25" class="bio-part bio-leg" />
+                    <!-- Right Leg -->
+                    <ellipse cx="58" cy="105" rx="6" ry="25" class="bio-part bio-leg" />
+                    <!-- Left Foot -->
+                    <ellipse cx="42" cy="130" rx="4" ry="3" class="bio-part bio-foot" />
+                    <!-- Right Foot -->
+                    <ellipse cx="58" cy="130" rx="4" ry="3" class="bio-part bio-foot" />
+                </svg>
+                <div class="bio-label" id="bio-character-label">Neutre</div>
+                <div class="bio-kp-indicator" id="bio-character-kp">Kp: --</div>
+            </div>
+
+            <!-- SCHUMANN CHARACTER -->
+            <div class="schumann-character-container" title="Résonance vibratoire basée sur la fréquence de Schumann">
+                <svg id="schumann-character" viewBox="0 0 100 140" class="schumann-character-svg">
+                    <!-- Head -->
+                    <circle cx="50" cy="20" r="12" class="schumann-part schumann-head" />
+                    <!-- Neck -->
+                    <rect x="47" y="30" width="6" height="8" class="schumann-part schumann-neck" />
+                    <!-- Torso -->
+                    <ellipse cx="50" cy="58" rx="16" ry="22" class="schumann-part schumann-torso" />
+                    <!-- Left Arm -->
+                    <ellipse cx="34" cy="52" rx="5" ry="18" transform="rotate(-15 34 52)"
+                        class="schumann-part schumann-arm" />
+                    <!-- Right Arm -->
+                    <ellipse cx="66" cy="52" rx="5" ry="18" transform="rotate(15 66 52)"
+                        class="schumann-part schumann-arm" />
+                    <!-- Hips -->
+                    <ellipse cx="50" cy="78" rx="14" ry="8" class="schumann-part schumann-hips" />
+                    <!-- Left Leg -->
+                    <ellipse cx="42" cy="105" rx="6" ry="25" class="schumann-part schumann-leg" />
+                    <!-- Right Leg -->
+                    <ellipse cx="58" cy="105" rx="6" ry="25" class="schumann-part schumann-leg" />
+                    <!-- Left Foot -->
+                    <ellipse cx="42" cy="130" rx="4" ry="3" class="schumann-part schumann-foot" />
+                    <!-- Right Foot -->
+                    <ellipse cx="58" cy="130" rx="4" ry="3" class="schumann-part schumann-foot" />
+                </svg>
+                <div class="schumann-label" id="schumann-character-label">Équilibre</div>
+                <div class="schumann-freq-indicator" id="schumann-character-freq">-- Hz</div>
+            </div>
+
+            <div class="header-stats">
+                <div class="stat-item pulse-box">
+                    <span class="stat-label">Fréquence Fondamentale</span>
+                    <span class="stat-value" id="live-freq-val">7.83 Hz</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="tabs-container">
+            <nav class="tabs-nav">
+                <button class="tab-button active" data-tab="sec-realtime">
+                    <span class="tab-icon">🌍</span>
+                    <span>Temps Réel</span>
+                </button>
+                <button class="tab-button" data-tab="sec-analysis">
+                    <span class="tab-icon">📊</span>
+                    <span>Analyse Globale</span>
+                </button>
+                <button class="tab-button" data-tab="sec-guide">
+                    <span class="tab-icon">💡</span>
+                    <span>Guide Pédagogique</span>
+                </button>
+                <button class="tab-button" data-tab="sec-storms">
+                    <span class="tab-icon">🌩️</span>
+                    <span>Activité Orageuse</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="control-bar" style="margin-bottom: 20px; text-align: right;">
+            <button id="refresh-data-btn" class="refresh-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 4v6h-6"></path>
+                    <path d="M1 20v-6h6"></path>
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+                Actualiser les Données
+            </button>
+        </div>
+
+        <!-- PRIMARY LIVE DATA SECTION (Full Width) -->
+        <section class="live-data-section" id="sec-realtime">
+            <div class="section-header">
+                <h2>Tomsk Space Observing System (Russie)</h2>
+                <div class="source-status">Direct Source</div>
+            </div>
+
+            <div class="primary-feed-container" id="tomsk-container">
+                <div class="loading-spinner"></div>
+                <div class="error-message" style="display:none">
+                    <span class="error-icon">⚠️</span>
+                    Image non disponible.
+                    <a href="http://sosrff.tsu.ru/?page_id=7" target="_blank" class="retry-link">Voir Site Officiel</a>
+                </div>
+                <div class="feed-info-overlay">
+                    <span id="tomsk-last-update">Mise à jour...</span>
+                    <span>Spectrogramme Amplitude | 0-40Hz</span>
+                </div>
+            </div>
+
+            <!-- ANALYSE CONTEXTUELLE (NOUVEAU) -->
+            <div class="analysis-dashboard">
+                <div class="analysis-card time-card">
+                    <div class="card-icon">🕒</div>
+                    <div class="card-data">
+                        <h3>Heure à Tomsk</h3>
+                        <div class="big-value" id="tomsk-clock">--:--</div>
+                        <span class="sub-text">Cherchez cette heure sur l'axe X du graphique</span>
+                    </div>
+                </div>
+
+                <div class="analysis-card kp-card">
+                    <div class="card-icon">🧲</div>
+                    <div class="card-data">
+                        <h3>Indice Kp (Géomagnétique)</h3>
+                        <div class="big-value" id="kp-index">--</div>
+                        <span class="sub-text" id="kp-status">Chargement...</span>
+                        <span class="update-time" id="kp-update-time">--:--</span>
+                    </div>
+                </div>
+
+                <div class="analysis-card solar-card">
+                    <div class="card-icon">☀️</div>
+                    <div class="card-data">
+                        <h3>Vent Solaire</h3>
+                        <div class="big-value" id="solar-wind">--</div>
+                        <span class="sub-text">km/s (Impact direct)</span>
+                        <span class="update-time" id="wind-update-time">--:--</span>
+                    </div>
+                </div>
+
+                <div class="analysis-card status-card" title="Estimation basée sur corrélation Kp (NOAA)">
+                    <div class="card-icon">📊</div>
+                    <div class="card-data">
+                        <h3>État Schumann</h3>
+                        <div class="big-value" id="schumann-state">--</div>
+                        <span class="sub-text" id="schumann-freq-display">Freq: -- Hz</span>
+                        <span class="update-time" id="status-update-time">--:--</span>
+                    </div>
+                </div>
+
+                <div class="analysis-card bio-card" title="Estimation théorique des effets sur le vivant">
+                    <div class="card-icon">🧬</div>
+                    <div class="card-data">
+                        <h3>Impact Biologique</h3>
+                        <div class="big-value" id="bio-impact">--</div>
+                        <span class="sub-text" id="bio-detail">Patience...</span>
+                        <span class="update-time" id="bio-update-time">--:--</span>
+                    </div>
+                </div>
+
+                <div class="analysis-card forecast-card" title="Prévisions NOAA K-Index sur 3 jours">
+                    <div class="card-icon">🔮</div>
+                    <div class="card-data">
+                        <h3>Prévisions (3 Jours)</h3>
+                        <div class="forecast-row" id="forecast-today">Auj: --</div>
+                        <div class="forecast-row" id="forecast-tomorrow">Dem: --</div>
+                        <div class="forecast-row" id="forecast-next">Apr: --</div>
+                    </div>
+                </div>
+
+                <div class="analysis-card sat-card" title="État des sondes spatiales">
+                    <div class="card-icon">📡</div>
+                    <div class="card-data">
+                        <h3>État Système</h3>
+                        <div class="sat-status-row" id="dscovr-row" style="border:none; margin:0; padding:0;">
+                            <span>DSCOVR (L1)</span>
+                            <span id="dscovr-status">Anal...</span>
+                        </div>
+                        <span class="sub-text" style="font-size:0.65rem; margin-top:5px;">Flux Données: NOAA SWPC</span>
+                        <span class="update-time" id="system-update-time">--:--</span>
+                    </div>
+                </div>
+            </div>
+            <!-- REAL-TIME CORRELATION GRAPH -->
+            <div class="analysis-card graph-card" style="grid-column: 1 / -1; margin-top: 10px;">
+                <div class="card-header-inline">
+                    <div class="card-icon">📈</div>
+                    <div class="card-data">
+                        <h3>Corrélation Temps Réel (Historique: 1 Heure)</h3>
+                        <span class="sub-text">Interactions: Vent Solaire vs Kp vs Schumann</span>
+                    </div>
+                </div>
+
+                <div class="graph-body">
+                    <div class="correlation-graph-container">
+                        <canvas id="correlation-canvas"></canvas>
+                        <div id="graph-tooltip"></div>
+                    </div>
+
+                    <div class="legend-vertical">
+                        <div class="legend-item">
+                            <span class="legend-dot" style="color:#ff4444; background: #ff4444;"></span>
+                            <div>
+                                <span>Vent Solaire</span>
+                                <a href="https://www.swpc.noaa.gov/products/real-time-solar-wind" target="_blank"
+                                    class="source-link" title="Source: NOAA SWPC">NOAA ↗</a>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="color:#ffaa00; background: #ffaa00;"></span>
+                            <div>
+                                <span>Indice Kp</span>
+                                <a href="https://www.swpc.noaa.gov/products/planetary-k-index" target="_blank"
+                                    class="source-link" title="Source: NOAA K-Index">NOAA ↗</a>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-dot" style="color:#00f0ff; background: #00f0ff;"></span>
+                            <div>
+                                <span>Fréq. Schumann</span>
+                                <a href="http://sosrff.tsu.ru/" target="_blank" class="source-link"
+                                    title="Source: Space Observing System (Tomsk)">SOSRFF ↗</a>
+                            </div>
+                        </div>
+
+                        <div class="legend-item" style="margin-top: 10px; opacity: 0.6; font-size: 0.75rem;">
+                            <span>🕒 Dernier point: <span id="graph-last-update">--:--</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GLOBAL ANALYSIS WIDGET -->
+        <section class="reference-section" id="sec-analysis">
+            <div class="global-analysis-widget">
+                <div class="analysis-header">
+                    <h3>🧠 Analyse Globale des Conditions</h3>
+                    <p style="font-size: 0.75rem; color: #aaa; margin: 5px 0 0 0;">
+                        Synthèse intelligente de toutes les données en temps réel
+                    </p>
+                </div>
+
+                <!-- Grille des métriques -->
+                <div class="analysis-grid">
+                    <div class="analysis-metric">
+                        <div class="metric-label">⚡ Indice Kp</div>
+                        <div class="metric-value" id="analysis-kp" style="color: #ffaa00;">--</div>
+                        <div class="metric-status" id="analysis-kp-status">--</div>
+                    </div>
+                    <div class="analysis-metric">
+                        <div class="metric-label">🌪️ Vent Solaire</div>
+                        <div class="metric-value" id="analysis-wind" style="color: #00f0ff;">--</div>
+                        <div class="metric-status" id="analysis-wind-status">--</div>
+                    </div>
+                    <div class="analysis-metric">
+                        <div class="metric-label">🌩️ Orages Mondiaux</div>
+                        <div class="metric-value" id="analysis-lightning" style="color: #ff4444;">--</div>
+                        <div class="metric-status" id="analysis-lightning-status">--</div>
+                    </div>
+                    <div class="analysis-metric">
+                        <div class="metric-label">🎵 Fréq. Schumann</div>
+                        <div class="metric-value" id="analysis-schumann" style="color: #a855f7;">--</div>
+                        <div class="metric-status" id="analysis-schumann-status">--</div>
+                    </div>
+                </div>
+
+                <!-- BARRES DES HARMONIQUES -->
+                <div
+                    style="margin-bottom: 20px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px; border: 1px solid rgba(168,85,247,0.3);">
+                    <h5
+                        style="margin: 0 0 15px 0; text-align: center; font-size: 0.75rem; color: #a855f7; text-transform: uppercase; letter-spacing: 1px;">
+                        🎵 Répartition des Harmoniques de Schumann
+                    </h5>
+
+                    <!-- LÉGENDE -->
+                    <div
+                        style="background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2); border-radius: 6px; padding: 10px; margin-bottom: 15px;">
+                        <div style="font-size: 0.7rem; color: #ccc; line-height: 1.6;">
+                            <strong style="color: #a855f7;">📖 Légende :</strong><br>
+                            <span style="color: #60a5fa;">■</span> <strong>F1 (Alpha)</strong> - Relaxation,
+                            méditation<br>
+                            <span style="color: #fbbf24;">■</span> <strong>F2 (Beta)</strong> - Concentration, éveil<br>
+                            <span style="color: #f97316;">■</span> <strong>F3 (Gamma)</strong> - Haute activité<br>
+                            <span style="color: #00ff88;">■</span> <strong>Moyenne</strong> - Intensité globale<br>
+                            <div
+                                style="margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.65rem; color: #888; font-style: italic;">
+                                💡 Intensité estimée d'après l'indice Kp géomagnétique
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <!-- F1 - 7.83 Hz -->
+                        <div>
+                            <div
+                                style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.7rem;">
+                                <span style="color: #60a5fa;"><strong>F1</strong> - 7,83 Hz (Alpha)</span>
+                                <span id="harmonic-f1-value" style="color: #60a5fa; font-weight: 700;">--</span>
+                            </div>
+                            <div
+                                style="background: rgba(0,0,0,0.4); height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div id="harmonic-bar-f1"
+                                    style="width: 0%; height: 100%; background: linear-gradient(90deg, #60a5fa, #93c5fd); transition: width 0.5s ease; box-shadow: 0 0 10px rgba(96,165,250,0.5);">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F2 - 14.3 Hz -->
+                        <div>
+                            <div
+                                style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.7rem;">
+                                <span style="color: #fbbf24;"><strong>F2</strong> - 14,3 Hz (Beta)</span>
+                                <span id="harmonic-f2-value" style="color: #fbbf24; font-weight: 700;">--</span>
+                            </div>
+                            <div
+                                style="background: rgba(0,0,0,0.4); height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div id="harmonic-bar-f2"
+                                    style="width: 0%; height: 100%; background: linear-gradient(90deg, #fbbf24, #fcd34d); transition: width 0.5s ease; box-shadow: 0 0 10px rgba(251,191,36,0.5);">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- F3 - 20.8 Hz -->
+                        <div>
+                            <div
+                                style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.7rem;">
+                                <span style="color: #f97316;"><strong>F3</strong> - 20,8 Hz (Gamma)</span>
+                                <span id="harmonic-f3-value" style="color: #f97316; font-weight: 700;">--</span>
+                            </div>
+                            <div
+                                style="background: rgba(0,0,0,0.4); height: 8px; border-radius: 4px; overflow: hidden;">
+                                <div id="harmonic-bar-f3"
+                                    style="width: 0%; height: 100%; background: linear-gradient(90deg, #f97316, #fb923c); transition: width 0.5s ease; box-shadow: 0 0 10px rgba(249,115,22,0.5);">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MOYENNE GLOBALE -->
+                    <div style="margin-top: 8px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.75rem;">
+                            <span style="color: #00ff88;"><strong>📊 MOYENNE GLOBALE</strong></span>
+                            <span id="harmonic-avg-value" style="color: #00ff88; font-weight: 700;">--</span>
+                        </div>
+                        <div
+                            style="background: rgba(0,0,0,0.4); height: 10px; border-radius: 5px; overflow: hidden; border: 1px solid rgba(0,255,136,0.3);">
+                            <div id="harmonic-bar-avg"
+                                style="width: 0%; height: 100%; background: linear-gradient(90deg, #00ff88, #00ffcc); transition: width 0.5s ease; box-shadow: 0 0 15px rgba(0,255,136,0.6);">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="margin-top: 12px; text-align: center; font-size: 0.65rem; color: #888; font-style: italic;">
+                        Intensité relative basée sur l'activité géomagnétique actuelle
+                    </div>
+                </div>
+
+                <!-- AMPLITUDE DE SCHUMANN (PUISSANCE) -->
+                <div
+                    style="margin-bottom: 20px; padding: 15px; background: rgba(0,240,255,0.1); border-radius: 8px; border: 1px solid rgba(0,240,255,0.3);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h5
+                            style="margin: 0; font-size: 0.8rem; color: #00f0ff; text-transform: uppercase; letter-spacing: 1px;">
+                            📡 Amplitude de Schumann (Puissance du Signal)
+                        </h5>
+                        <div id="schumann-amplitude-value" style="font-size: 1.2rem; font-weight: 700; color: #00f0ff;">
+                            --</div>
+                    </div>
+
+                    <!-- Jauge visuelle -->
+                    <div
+                        style="position: relative; background: rgba(0,0,0,0.4); height: 30px; border-radius: 15px; overflow: hidden; margin-bottom: 12px; border: 1px solid rgba(0,240,255,0.3);">
+                        <div id="amplitude-bar"
+                            style="width: 0%; height: 100%; background: linear-gradient(90deg, #00ff88 0%, #00f0ff 50%, #ff4444 100%); transition: width 0.5s ease; box-shadow: 0 0 20px rgba(0,240,255,0.6);">
+                        </div>
+                        <div
+                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.75rem; font-weight: 700; color: #fff; text-shadow: 0 0 5px #000; z-index: 10;">
+                            <span id="amplitude-percent">--</span>%
+                        </div>
+                        <!-- Graduations -->
+                        <div
+                            style="position: absolute; bottom: -15px; left: 0; right: 0; display: flex; justify-content: space-between; font-size: 0.6rem; color: #666;">
+                            <span>0</span>
+                            <span style="color: #00f0ff;">50</span>
+                            <span>100</span>
+                        </div>
+                    </div>
+
+                    <!-- TENDANCE ET COMPARAISON -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                        <div
+                            style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 0.65rem; color: #aaa; margin-bottom: 4px;">TENDANCE</div>
+                            <div id="amplitude-trend" style="font-size: 0.8rem; font-weight: 600;">-- --</div>
+                        </div>
+                        <div
+                            style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; text-align: center;">
+                            <div style="font-size: 0.65rem; color: #aaa; margin-bottom: 4px;">COMPARAISON</div>
+                            <div id="amplitude-comparison" style="font-size: 0.75rem; font-weight: 600;">--</div>
+                        </div>
+                    </div>
+
+                    <!-- RECOMMANDATION CONTEXTUELLE -->
+                    <div
+                        style="background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.2); padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                        <div
+                            style="font-size: 0.65rem; color: #00f0ff; font-weight: 600; margin-bottom: 6px; text-transform: uppercase;">
+                            💡 Recommandation</div>
+                        <div id="amplitude-recommendation" style="font-size: 0.7rem; color: #ccc; line-height: 1.5;">
+                            Collecte des données...</div>
+                    </div>
+
+                    <!-- TENDANCE HISTORIQUE & EFFETS BIO -->
+                    <div
+                        style="background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2); padding: 12px; border-radius: 6px; margin-bottom: 15px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div
+                                style="font-size: 0.65rem; color: #a855f7; font-weight: 600; text-transform: uppercase;">
+                                📈 Tendance depuis le lancement</div>
+                            <div style="font-size: 0.6rem; color: #888;">Durée : <span id="session-duration"
+                                    style="color: #a855f7; font-weight: 600;">00:00</span></div>
+                        </div>
+
+                        <!-- Mini graphique -->
+                        <div
+                            style="position: relative; height: 60px; background: rgba(0,0,0,0.3); border-radius: 4px; overflow: hidden; margin-bottom: 10px;">
+                            <canvas id="amplitude-history-canvas" width="400" height="60"
+                                style="width: 100%; height: 100%;"></canvas>
+                            <div style="position: absolute; top: 2px; left: 4px; font-size: 0.55rem; color: #666;">100
+                            </div>
+                            <div style="position: absolute; bottom: 2px; left: 4px; font-size: 0.55rem; color: #666;">0
+                            </div>
+                        </div>
+
+                        <!-- Statistiques -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
+                            <div
+                                style="background: rgba(0,0,0,0.3); padding: 6px; border-radius: 4px; text-align: center;">
+                                <div style="font-size: 0.55rem; color: #888;">MIN</div>
+                                <div id="amplitude-min" style="font-size: 0.75rem; color: #00ff88; font-weight: 700;">--
+                                </div>
+                            </div>
+                            <div
+                                style="background: rgba(0,0,0,0.3); padding: 6px; border-radius: 4px; text-align: center;">
+                                <div style="font-size: 0.55rem; color: #888;">MOYENNE</div>
+                                <div id="amplitude-avg" style="font-size: 0.75rem; color: #00f0ff; font-weight: 700;">--
+                                </div>
+                            </div>
+                            <div
+                                style="background: rgba(0,0,0,0.3); padding: 6px; border-radius: 4px; text-align: center;">
+                                <div style="font-size: 0.55rem; color: #888;">MAX</div>
+                                <div id="amplitude-max" style="font-size: 0.75rem; color: #ff4444; font-weight: 700;">--
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Effets biologiques observés -->
+                        <div style="background: rgba(0,0,0,0.4); padding: 8px; border-radius: 4px;">
+                            <div style="font-size: 0.6rem; color: #a855f7; font-weight: 600; margin-bottom: 5px;">🧬
+                                EFFETS BIOLOGIQUES POTENTIELS :</div>
+                            <div id="bio-effects-history" style="font-size: 0.65rem; color: #ccc; line-height: 1.6;">
+                                Collecte des données pour analyse...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Explication pédagogique -->
+                    <div style="background: rgba(0,0,0,0.3); padding: 10px; border-radius: 6px; margin-top: 20px;">
+                        <div style="font-size: 0.7rem; line-height: 1.6; color: #ccc;">
+                            <strong style="color: #00f0ff;">📚 Différence Fréquence vs Amplitude :</strong><br>
+                            <div style="margin: 8px 0; padding-left: 10px; border-left: 2px solid rgba(0,240,255,0.3);">
+                                <strong style="color: #fff;">Fréquence</strong> (Hz ci-dessus) = La "note" jouée par la
+                                Terre (comme Do, Ré, Mi)<br>
+                                <strong style="color: #fff;">Amplitude</strong> (ci-dessus) = Le "volume" de cette note
+                                (fort ou faible)
+                            </div>
+                            <div
+                                style="margin-top: 10px; padding: 8px; background: rgba(0,240,255,0.1); border-radius: 4px; font-size: 0.65rem;">
+                                💡 <strong>Exemple :</strong> Un piano peut jouer la note "Do" (fréquence fixe)
+                                doucement ou fort (amplitude variable).<br>
+                                De même, Schumann reste à ~7,83 Hz mais son intensité change de 0 à 100 selon l'activité
+                                géomagnétique.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Échelle d'interprétation -->
+                    <div style="margin-top: 12px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                        <div style="font-size: 0.65rem; color: #aaa; line-height: 1.8;">
+                            <strong style="color: #fff; font-size: 0.7rem;">📊 Interprétation de l'amplitude
+                                :</strong><br>
+                            <span style="color: #00ff88;">●</span> <strong>0-30</strong> : Signal faible, conditions
+                            calmes<br>
+                            <span style="color: #00f0ff;">●</span> <strong>31-60</strong> : Signal modéré, activité
+                            normale<br>
+                            <span style="color: #ffaa00;">●</span> <strong>61-80</strong> : Signal fort, activité
+                            élevée<br>
+                            <span style="color: #ff4444;">●</span> <strong>81-100</strong> : Signal très intense,
+                            tempête géomagnétique
+                        </div>
+                    </div>
+
+                    <div
+                        style="margin-top: 10px; text-align: center; font-size: 0.6rem; color: #666; font-style: italic;">
+                        Amplitude estimée d'après l'indice Kp et l'activité orageuse mondiale<br>
+                        <span style="color: #888; font-size: 0.58rem; margin-top: 3px; display: inline-block;">
+                            ⏱️ Mise à jour : Orages (toutes les 5s) + Kp (dernière : <span id="last-kp-update"
+                                style="color: #00f0ff;">--:--</span>) • Tendance sur 10 valeurs
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Conclusion globale -->
+                <div class="analysis-conclusion">
+                    <div style="text-align: center;">
+                        <div class="global-status-badge" id="global-status-badge">INITIALISATION...</div>
+                    </div>
+
+                    <div class="conclusion-title">📋 ANALYSE DE LA SITUATION</div>
+                    <div class="conclusion-text" id="global-analysis-text">
+                        Collecte des données en cours...
+                    </div>
+
+                    <div class="conclusion-recommendations">
+                        <strong style="color: #00f0ff; font-size: 0.8rem;">💡 RECOMMANDATIONS :</strong>
+                        <ul id="global-recommendations">
+                            <li>En attente des données...</li>
+                        </ul>
+                    </div>
+
+                    <div
+                        style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.7rem; color: #666;">
+                        🔄 Analyse mise à jour automatiquement toutes les minutes
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- REFERENCE DATA (Educational Guide) -->
+        <section class="reference-section" id="sec-guide">
+            <div class="section-header">
+                <h2>💡 Guide : Les Harmoniques & le Cerveau</h2>
+                <p style="font-size: 0.85rem; color: #aaa; margin-top: 8px;">Comment la Terre influence votre cerveau en
+                    temps réel</p>
+            </div>
+            <div class="viz-card harmonics-card">
+                <!-- INTRODUCTION SIMPLE -->
+                <div
+                    style="background: rgba(0, 240, 255, 0.1); border-left: 3px solid #00f0ff; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
+                    <p style="margin: 0 0 10px 0; font-size: 0.9rem; line-height: 1.6; color: #fff;">
+                        <strong>🌍 Qu'est-ce que c'est ?</strong><br>
+                        La Terre produit naturellement des <strong>vibrations électromagnétiques</strong> à environ
+                        <strong>7,83 Hz</strong>
+                        (appelées "Résonance de Schumann"). Ces vibrations créent plusieurs "harmoniques" - comme les
+                        notes d'un piano qui résonnent ensemble.
+                    </p>
+                    <p style="margin: 0; font-size: 0.85rem; line-height: 1.5; color: #ccc;">
+                        <strong>🧠 Le lien avec votre cerveau :</strong> Vos ondes cérébrales vibrent naturellement aux
+                        <strong>mêmes fréquences</strong> !
+                        Quand l'activité de la Terre change, cela peut influencer votre état mental et physique.
+                    </p>
+                </div>
+
+                <!-- QU'EST-CE QUI ACTIVE LES HARMONIQUES -->
+                <div
+                    style="background: rgba(255, 170, 0, 0.1); border-left: 3px solid #ffaa00; padding: 15px; margin-bottom: 20px; border-radius: 8px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 0.85rem; color: #ffaa00;">
+                        ⚡ Qu'est-ce qui active les harmoniques ?
+                    </h4>
+                    <div style="font-size: 0.8rem; line-height: 1.7; color: #ccc;">
+                        <p style="margin: 0 0 12px 0;">
+                            Les résonances de Schumann sont principalement activées par :
+                        </p>
+
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #fff;">🌩️ 1. Les orages et éclairs (Source principale)</strong><br>
+                            <span style="color: #aaa; font-size: 0.75rem;">
+                                Chaque éclair produit une impulsion électromagnétique qui "excite" toutes les
+                                harmoniques.
+                                Plus il y a d'orages sur Terre (surtout tropicaux), plus l'activité est forte.
+                            </span>
+                        </div>
+
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #fff;">☀️ 2. L'activité solaire</strong><br>
+                            <span style="color: #aaa; font-size: 0.75rem;">
+                                Les <strong>éruptions solaires</strong> et le <strong>vent solaire</strong> perturbent
+                                l'ionosphère
+                                → modifie la "cavité" Terre-ionosphère → change les fréquences et intensités.
+                            </span>
+                        </div>
+
+                        <div style="margin-bottom: 10px;">
+                            <strong style="color: #fff;">🧲 3. Les tempêtes géomagnétiques</strong><br>
+                            <span style="color: #aaa; font-size: 0.75rem;">
+                                Quand l'indice Kp augmente (voir widget ci-dessus), l'ionosphère se comprime
+                                → les harmoniques <strong>hautes (F3, F4, F5)</strong> s'intensifient.
+                            </span>
+                        </div>
+
+                        <div>
+                            <strong style="color: #fff;">🌍 4. Facteurs terrestres</strong><br>
+                            <span style="color: #aaa; font-size: 0.75rem;">
+                                Moussons, saisons (plus d'orages l'été dans l'hémisphère nord),
+                                zone géographique (Afrique, Amazonie = "générateurs" d'éclairs).
+                            </span>
+                        </div>
+
+                        <p
+                            style="margin: 15px 0 0 0; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.1); color: #ffeb3b; font-size: 0.75rem;">
+                            💡 <strong>Résultat :</strong> Les harmoniques <strong>basses (F1, F2)</strong> dominent en
+                            conditions calmes.
+                            Les harmoniques <strong>hautes (F3+)</strong> augmentent lors de perturbations solaires ou
+                            géomagnétiques.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ACTIVITÉ ORAGEUSE PAR RÉGION -->
+                <div id="sec-storms"
+                    style="background: rgba(255, 68, 68, 0.1); border-left: 3px solid #ff4444; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 12px; text-align: center;">
+                        <h4 style="margin: 0 0 5px 0; font-size: 0.85rem; color: #ff4444;">
+                            ⚡ Activité orageuse en direct
+                        </h4>
+                        <p style="margin: 0; font-size: 0.7rem; color: #aaa;">
+                            Nombre d'éclairs détectés par minute dans chaque région
+                        </p>
+                    </div>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; font-size: 0.7rem;">
+                        <div
+                            style="background: rgba(255,68,68,0.1); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid rgba(255,68,68,0.3);">
+                            <div style="color: #aaa; font-size: 0.65rem; margin-bottom: 4px;">🌍 Afrique</div>
+                            <div style="color: #ff4444; font-weight: 700; font-size: 1.3rem;" id="lightning-africa">--
+                            </div>
+                            <div style="color: #666; font-size: 0.6rem; margin: 2px 0 6px 0;">éclairs/min</div>
+                            <div
+                                style="background: rgba(0,0,0,0.3); height: 4px; border-radius: 2px; overflow: hidden;">
+                                <div id="lightning-bar-africa"
+                                    style="width: 0%; height: 100%; background: #ff4444; transition: width 0.5s ease; box-shadow: 0 0 8px rgba(255,68,68,0.6);">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            style="background: rgba(0,240,255,0.1); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid rgba(0,240,255,0.3);">
+                            <div style="color: #aaa; font-size: 0.65rem; margin-bottom: 4px;">🌎 Amérique</div>
+                            <div style="color: #00f0ff; font-weight: 700; font-size: 1.3rem;" id="lightning-america">--
+                            </div>
+                            <div style="color: #666; font-size: 0.6rem; margin: 2px 0 6px 0;">éclairs/min</div>
+                            <div
+                                style="background: rgba(0,0,0,0.3); height: 4px; border-radius: 2px; overflow: hidden;">
+                                <div id="lightning-bar-america"
+                                    style="width: 0%; height: 100%; background: #00f0ff; transition: width 0.5s ease; box-shadow: 0 0 8px rgba(0,240,255,0.6);">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            style="background: rgba(255,170,0,0.1); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid rgba(255,170,0,0.3);">
+                            <div style="color: #aaa; font-size: 0.65rem; margin-bottom: 4px;">🌏 Asie</div>
+                            <div style="color: #ffaa00; font-weight: 700; font-size: 1.3rem;" id="lightning-asia">--
+                            </div>
+                            <div style="color: #666; font-size: 0.6rem; margin: 2px 0 6px 0;">éclairs/min</div>
+                            <div
+                                style="background: rgba(0,0,0,0.3); height: 4px; border-radius: 2px; overflow: hidden;">
+                                <div id="lightning-bar-asia"
+                                    style="width: 0%; height: 100%; background: #ffaa00; transition: width 0.5s ease; box-shadow: 0 0 8px rgba(255,170,0,0.6);">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            style="background: rgba(168,85,247,0.1); padding: 10px; border-radius: 6px; text-align: center; border: 1px solid rgba(168,85,247,0.3);">
+                            <div style="color: #aaa; font-size: 0.65rem; margin-bottom: 4px;">🇪🇺 Europe</div>
+                            <div style="color: #a855f7; font-weight: 700; font-size: 1.3rem;" id="lightning-europe">--
+                            </div>
+                            <div style="color: #666; font-size: 0.6rem; margin: 2px 0 6px 0;">éclairs/min</div>
+                            <div
+                                style="background: rgba(0,0,0,0.3); height: 4px; border-radius: 2px; overflow: hidden;">
+                                <div id="lightning-bar-europe"
+                                    style="width: 0%; height: 100%; background: #a855f7; transition: width 0.5s ease; box-shadow: 0 0 8px rgba(168,85,247,0.6);">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GRAPHIQUE VERTICAL -->
+                    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                        <h5
+                            style="margin: 0 0 15px 0; text-align: center; font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px;">
+                            📊 Vue d'ensemble mondiale
+                        </h5>
+                        <div
+                            style="display: flex; justify-content: space-around; align-items: flex-end; height: 150px; padding: 0 20px; gap: 15px;">
+                            <!-- Afrique -->
+                            <div
+                                style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+                                <div
+                                    style="position: relative; width: 100%; max-width: 50px; background: rgba(0,0,0,0.3); border-radius: 4px 4px 0 0; overflow: hidden; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+                                    <div id="chart-bar-africa"
+                                        style="width: 100%; height: 0%; background: linear-gradient(to top, #ff4444, #ff6666); transition: height 0.5s ease; box-shadow: 0 -2px 10px rgba(255,68,68,0.5);">
+                                    </div>
+                                </div>
+                                <div style="margin-top: 6px; font-size: 0.6rem; color: #aaa; text-align: center;">
+                                    🌍<br>Afrique</div>
+                                <div style="font-size: 0.7rem; color: #ff4444; font-weight: 700;" id="chart-val-africa">
+                                    --</div>
+                            </div>
+                            <!-- Amérique -->
+                            <div
+                                style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+                                <div
+                                    style="position: relative; width: 100%; max-width: 50px; background: rgba(0,0,0,0.3); border-radius: 4px 4px 0 0; overflow: hidden; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+                                    <div id="chart-bar-america"
+                                        style="width: 100%; height: 0%; background: linear-gradient(to top, #00f0ff, #00ffff); transition: height 0.5s ease; box-shadow: 0 -2px 10px rgba(0,240,255,0.5);">
+                                    </div>
+                                </div>
+                                <div style="margin-top: 6px; font-size: 0.6rem; color: #aaa; text-align: center;">
+                                    🌎<br>Amérique</div>
+                                <div style="font-size: 0.7rem; color: #00f0ff; font-weight: 700;"
+                                    id="chart-val-america">--</div>
+                            </div>
+                            <!-- Asie -->
+                            <div
+                                style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+                                <div
+                                    style="position: relative; width: 100%; max-width: 50px; background: rgba(0,0,0,0.3); border-radius: 4px 4px 0 0; overflow: hidden; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+                                    <div id="chart-bar-asia"
+                                        style="width: 100%; height: 0%; background: linear-gradient(to top, #ffaa00, #ffcc00); transition: height 0.5s ease; box-shadow: 0 -2px 10px rgba(255,170,0,0.5);">
+                                    </div>
+                                </div>
+                                <div style="margin-top: 6px; font-size: 0.6rem; color: #aaa; text-align: center;">
+                                    🌏<br>Asie</div>
+                                <div style="font-size: 0.7rem; color: #ffaa00; font-weight: 700;" id="chart-val-asia">--
+                                </div>
+                            </div>
+                            <!-- Europe -->
+                            <div
+                                style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+                                <div
+                                    style="position: relative; width: 100%; max-width: 50px; background: rgba(0,0,0,0.3); border-radius: 4px 4px 0 0; overflow: hidden; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+                                    <div id="chart-bar-europe"
+                                        style="width: 100%; height: 0%; background: linear-gradient(to top, #a855f7, #c084fc); transition: height 0.5s ease; box-shadow: 0 -2px 10px rgba(168,85,247,0.5);">
+                                    </div>
+                                </div>
+                                <div style="margin-top: 6px; font-size: 0.6rem; color: #aaa; text-align: center;">
+                                    🇪🇺<br>Europe</div>
+                                <div style="font-size: 0.7rem; color: #a855f7; font-weight: 700;" id="chart-val-europe">
+                                    --</div>
+                            </div>
+                            <!-- Séparateur -->
+                            <div
+                                style="width: 2px; height: 80%; background: rgba(255,255,255,0.1); align-self: flex-end; margin-bottom: 35px;">
+                            </div>
+                            <!-- Total Mondial -->
+                            <div
+                                style="flex: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;">
+                                <div
+                                    style="position: relative; width: 100%; max-width: 60px; background: rgba(0,0,0,0.3); border-radius: 4px 4px 0 0; overflow: hidden; flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end; border: 1px solid rgba(255,255,255,0.2);">
+                                    <div id="chart-bar-global"
+                                        style="width: 100%; height: 0%; background: linear-gradient(to top, #00ff88, #00ffcc); transition: height 0.5s ease; box-shadow: 0 -2px 15px rgba(0,255,136,0.6);">
+                                    </div>
+                                </div>
+                                <div
+                                    style="margin-top: 6px; font-size: 0.65rem; color: #fff; font-weight: 600; text-align: center;">
+                                    🌍<br>MONDIAL</div>
+                                <div style="font-size: 0.85rem; color: #00ff88; font-weight: 700;"
+                                    id="chart-val-global">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        style="margin-top: 10px; text-align: center; font-size: 0.65rem; color: #666; font-style: italic;">
+                        🔄 Mise à jour automatique toutes les 5 secondes
+                    </div>
+                </div>
+
+                <div class="harmonics-container">
+                    <!-- VISUALISATION avec pie chart -->
+                    <h3
+                        style="font-size: 0.9rem; color: #fff; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
+                        📊 Répartition actuelle des harmoniques
+                    </h3>
+                    <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 25px;">
+                        <div id="freq-pie"
+                            style="width: 100px; height: 100px; border-radius: 50%; background: conic-gradient(#00f0ff 0% 60%, #ffaa00 60% 85%, #ff4444 85% 100%); box-shadow: 0 0 20px rgba(0,0,0,0.7); border: 3px solid rgba(255,255,255,0.1); flex-shrink: 0;">
+                        </div>
+
+                        <div style="flex: 1;">
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <span
+                                        style="width: 12px; height: 12px; background: #00f0ff; border-radius: 50%; box-shadow: 0 0 8px #00f0ff;"></span>
+                                    <strong style="color: #00f0ff; font-size: 0.85rem;">Alpha (Calme)</strong>
+                                    <span id="val-f1" style="color: #aaa; font-size: 0.8rem;">--%</span>
+                                </div>
+                                <p style="margin: 0; font-size: 0.75rem; color: #bbb; padding-left: 20px;">
+                                    🧘 Relaxation profonde, méditation, guérison naturelle
+                                </p>
+                            </div>
+
+                            <div style="margin-bottom: 12px;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <span
+                                        style="width: 12px; height: 12px; background: #ffaa00; border-radius: 50%;"></span>
+                                    <strong style="color: #ffaa00; font-size: 0.85rem;">Beta (Actif)</strong>
+                                    <span id="val-f2" style="color: #aaa; font-size: 0.8rem;">--%</span>
+                                </div>
+                                <p style="margin: 0; font-size: 0.75rem; color: #bbb; padding-left: 20px;">
+                                    💼 Concentration au travail, résolution de problèmes
+                                </p>
+                            </div>
+
+                            <div>
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                    <span
+                                        style="width: 12px; height: 12px; background: #ff4444; border-radius: 50%;"></span>
+                                    <strong style="color: #ff4444; font-size: 0.85rem;">Gamma (Stress)</strong>
+                                    <span id="val-f3" style="color: #aaa; font-size: 0.8rem;">--%</span>
+                                </div>
+                                <p style="margin: 0; font-size: 0.75rem; color: #bbb; padding-left: 20px;">
+                                    ⚡ Surcharge mentale, anxiété, agitation
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BARRES D'INTENSITÉ avec explications -->
+                    <h3
+                        style="font-size: 0.9rem; color: #fff; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">
+                        🎵 Les 3 fréquences harmoniques principales
+                    </h3>
+
+                    <div class="bars-section">
+                        <div class="harmonic-bar" style="margin-bottom: 18px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <span style="font-size: 0.8rem; color: #00f0ff; font-weight: 600;">🌍 F1 : 7,83 Hz -
+                                    Fréquence Fondamentale</span>
+                                <span style="font-size: 0.75rem; color: #aaa;">Intensité</span>
+                            </div>
+                            <p style="margin: 0 0 6px 0; font-size: 0.7rem; color: #999; line-height: 1.4;">
+                                <em>La "battement de cœur" de la Terre. Correspond aux ondes Alpha de votre cerveau
+                                    →
+                                    favorise le calme et la régénération</em>
+                            </p>
+                            <div class="bar-track">
+                                <div id="f1-bar" class="bar-fill"
+                                    style="width: 80%; background: #00f0ff; box-shadow: 0 0 10px rgba(0,240,255,0.5); transition: width 1s;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="harmonic-bar" style="margin-bottom: 18px;">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <span style="font-size: 0.8rem; color: #ffaa00; font-weight: 600;">⚙️ F2 : 14,3 Hz -
+                                    Harmonique Secondaire</span>
+                                <span style="font-size: 0.75rem; color: #aaa;">Intensité</span>
+                            </div>
+                            <p style="margin: 0 0 6px 0; font-size: 0.7rem; color: #999; line-height: 1.4;">
+                                <em>Correspond aux ondes Beta → stimule la concentration et l'activité mentale</em>
+                            </p>
+                            <div class="bar-track">
+                                <div id="f2-bar" class="bar-fill"
+                                    style="width: 50%; background: #ffaa00; box-shadow: 0 0 10px rgba(255, 170, 0, 0.5); transition: width 1s;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="harmonic-bar">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <span style="font-size: 0.8rem; color: #ff4444; font-weight: 600;">⚡ F3 : 20,8 Hz -
+                                    Harmonique Tertiaire</span>
+                                <span style="font-size: 0.75rem; color: #aaa;">Intensité</span>
+                            </div>
+                            <p style="margin: 0 0 6px 0; font-size: 0.7rem; color: #999; line-height: 1.4;">
+                                <em>Fréquence élevée → peut indiquer du stress ou de l'agitation si trop
+                                    présente</em>
+                            </p>
+                            <div class="bar-track">
+                                <div id="f3-bar" class="bar-fill"
+                                    style="width: 30%; background: #ff4444; box-shadow: 0 0 10px rgba(255, 68, 68, 0.5); transition: width 1s;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HARMONIQUES SUPÉRIEURES (INFO) -->
+                    <div
+                        style="margin-top: 20px; padding: 12px; background: rgba(168, 85, 247, 0.1); border-left: 3px solid #a855f7; border-radius: 6px;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 0.8rem; color: #a855f7;">
+                            ℹ️ Et les harmoniques supérieures (F4, F5...) ?
+                        </h4>
+                        <p style="margin: 0; font-size: 0.75rem; line-height: 1.5; color: #ccc;">
+                            La Terre produit aussi des harmoniques plus élevées :<br>
+                            • <strong style="color: #fff;">F4 : ~27 Hz</strong> (souvent arrondie à "25 Hz")<br>
+                            • <strong style="color: #fff;">F5 : ~33 Hz</strong><br>
+                            • <strong style="color: #fff;">F6 : ~39 Hz</strong><br>
+                            <br>
+                            Ces fréquences sont <strong>moins intenses</strong> mais visibles sur le spectrogramme
+                            comme
+                            des lignes plus faibles.
+                            Elles correspondent à des ondes cérébrales <strong>très actives</strong> (Gamma élevé).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- GUIDE DE LECTURE -->
+                <div style="margin-top: 25px; border-top: 2px solid rgba(255,255,255,0.1); padding-top: 20px;">
+                    <h3 style="font-size: 0.9rem; color: #fff; margin-bottom: 12px;">
+                        🔍 Comment lire le spectrogramme de Tomsk ?
+                    </h3>
+                    <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px;">
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.8; color: #ccc;">
+                            <li><strong style="color: #00f0ff;">Axe horizontal (bas)</strong> : L'heure locale à
+                                Tomsk
+                                (de 00:00 à 24:00)</li>
+                            <li><strong style="color: #00f0ff;">Axe vertical (gauche)</strong> : Les fréquences en
+                                Hertz
+                                (0 à 40 Hz)</li>
+                            <li><strong style="color: #00f0ff;">Lignes horizontales lumineuses</strong> vers 8Hz,
+                                14Hz,
+                                20Hz = Les harmoniques de Schumann</li>
+                            <li><strong style="color: #ffeb3b;">Plus c'est blanc/jaune</strong> = Plus l'amplitude
+                                est
+                                forte</li>
+                            <li><strong style="color: #ff4444;">Plus c'est bleu/noir</strong> = Activité faible ou
+                                nulle
+                            </li>
+                        </ul>
+                    </div>
+
+                    <p style="margin-top: 15px; font-size: 0.75rem; color: #888; font-style: italic;">
+                        💡 Astuce : Cherchez l'heure actuelle de Tomsk (affichée en haut) sur le graphique pour voir
+                        l'activité en temps réel !
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>Schumann Monitor &copy; 2024</p>
+            <p class="footer-note">Affichage exclusif des données publiques des observatoires.</p>
+        </div>
+    </footer>
+
+    <!-- SCROLL TO TOP BUTTON -->
+    <div class="scroll-to-top" title="Retour en haut"></div>
+
+    <script src="tabs-navigation.js"></script>
+    <script src="global-analysis.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
